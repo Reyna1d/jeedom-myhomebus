@@ -1,0 +1,25 @@
+{
+  "name": "MyHomeBus",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "./app",
+  "author": {
+    "name": "Original code by Reynald Ligiardi"
+  },
+  "keywords": [
+    "Jeedom",
+    "Myhome",
+    "Legrand"
+  ],
+  "maintainers": [
+    {
+      "name": "Reynald Ligiardi",
+      "email": "reynald.ligiardi@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "jsonfile": "*",    
+    "request" : "*"
+  }
+}
