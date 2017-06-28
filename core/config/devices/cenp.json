@@ -1,0 +1,78 @@
+{
+	"cenp":{
+		"name":"Commande CEN+",
+		"isVisible":"1",
+		"isEnable":"1",
+		"cmd":[
+			{
+				"name":"Short",
+				"type":"info",
+				"subType":"binary",
+				"isHistorized":"0",
+				"logicalId": "press21",
+				"unite":"",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"0",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"GENERIC_INFO"
+				},
+				"isVisible":"0"
+			},{
+				"name":"Start extended",
+				"type":"info",
+				"subType":"binary",
+				"isHistorized":"0",
+				"logicalId": "press22",
+				"unite":"",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"0",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"GENERIC_INFO"
+				},
+				"isVisible":"0"
+			},{
+				"name":"Extended",
+				"type":"info",
+				"subType":"binary",
+				"isHistorized":"0",
+				"logicalId": "press23",
+				"unite":"",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"0",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"GENERIC_INFO"
+				},
+				"isVisible":"0"
+			},{
+				"name":"Released extended",
+				"type":"info",
+				"subType":"binary",
+				"isHistorized":"0",
+				"logicalId": "press24",
+				"unite":"",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"0",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"GENERIC_INFO"
+				},
+				"isVisible":"0"
+			}
+		]
+	}
+}

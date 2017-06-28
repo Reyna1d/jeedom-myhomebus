@@ -1,0 +1,70 @@
+{
+	"groupeVR": {
+		"name": "Groupe de Volet Roulant",
+		"configuration": {
+			"version": "1.0",
+			"update": ""
+		},
+		"subtype": {
+			"00": {
+				"name": "Defaut",
+				"commands": [                    
+					{
+                        "name": "Ouvrir",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*2*1*##GROUP###",
+						"configuration": {
+							"whatdim": {
+								"what": "2",
+								"dim": "NULL",
+								"nom": "Move_Up"
+							}
+                        },
+						"display": {
+							"icon":"<i class=\"fa fa-arrow-up\"><\/i>",
+							"generic_type": "FLAP_UP"
+						}
+                    },
+                    {
+                        "name": "Fermer",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*2*2*##GROUP###",
+						"configuration": {
+							"whatdim": {
+								"what": "1",
+								"dim": "NULL",
+								"nom": "Move_Down"
+							}
+						},
+						"display": {
+							"icon":"<i class=\"fa fa-arrow-down\"><\/i>",
+							"generic_type": "FLAP_DOWN"
+						}
+					},
+                    {
+                        "name": "Stop",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*2*0*##GROUP###",
+						"configuration": {
+							"whatdim": {
+								"what": "0",
+								"dim": "NULL",
+								"nom": "Move_Stop"
+							}
+						},
+						"display": {
+							"icon":"<i class=\"fa fa-stop\"><\/i>",
+							"generic_type": "FLAP_STOP"
+						}
+                    }
+				]
+			}
+		}
+	}
+}

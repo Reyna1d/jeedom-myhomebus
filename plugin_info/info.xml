@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info>
+    <id>myhomebus</id>
+    <name>MyHome BUS</name>
+    <description>Plugin pour utiliser le module Legrand/Bticino BUS</description>
+    <icon>fa fa-rebel</icon>
+    <licence>AGPL</licence>
+    <author>Reynald LIGIARDI</author>
+    <installation>Aucune</installation>
+    <require>2.0</require>
+    <version>0.9</version>
+    <category>automation protocol</category>
+    <allowRemote>1</allowRemote>
+	<hasOwnDeamon>1</hasOwnDeamon>
+	<hasDependency>1</hasDependency>
+</info>
+

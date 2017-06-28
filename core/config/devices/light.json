@@ -1,0 +1,109 @@
+{
+	"light":{
+		"name":"Lumière",
+		"isVisible":"1",
+		"isEnable":"1",
+		"cmd":[
+			{
+				"name":"Etat",
+				"type":"info",
+				"subType":"binary",
+				"isHistorized":"0",
+				"logicalId": "status",
+				"unite":"",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"LIGHT_STATE",
+					"showNameOndashboard":"0",
+					"showNameOnplan":"0",
+					"showNameOnview":"0",
+					"showNameOnmobile":"0"
+				},
+				"isVisible":"0"
+			},{
+				"name":"Toogle",
+				"type":"action",
+				"subType":"other",
+				"isHistorized":"0",
+				"logicalId": "*1*99*#WHERE###",
+				"configuration":{					
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"template":{
+					"dashboard":"light",
+					"mobile":"light"
+				},
+				"display":{
+					"generic_type":"LIGHT_TOGGLE",
+					"showNameOndashboard":"0",
+					"showNameOnplan":"0",
+					"showNameOnview":"0",
+					"showNameOnmobile":"0"
+				},
+				"value":"Etat",
+				"isVisible":"1"
+			},{
+				"name":"On",
+				"type":"action",
+				"subType":"other",
+				"isHistorized":"0",
+				"logicalId": "*1*1*#WHERE###",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"LIGHT_ON"
+				},
+				"value":"Etat",
+				"isVisible":"0"
+			},{
+				"name":"Off",
+				"type":"action",
+				"subType":"other",
+				"isHistorized":"0",
+				"logicalId": "*1*0*#WHERE###",
+				"configuration":{					
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"LIGHT_OFF"
+				},
+				"value":"Etat",
+				"isVisible":"0"
+			},
+			{"name": "ON timed 1 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*11*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 2 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*12*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 3 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*13*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 4 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*14*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 5 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*15*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 15 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*16*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 30 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*17*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "ON timed 0,5 min", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*18*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},									
+			{"name": "Blinking for 0,5 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*20*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 1 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*21*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 1,5 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*22*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 2 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*23*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 2,5 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*24*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 3 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*25*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 3,5 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*26*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 4 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*27*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 4,5 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*28*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}},				
+			{"name": "Blinking for 5 sec", "type": "action", "subtype": "other", "isVisible": 0, "logicalId": "*1*29*#WHERE###", "eventOnly": 0, "configuration": {}, "display": { "generic_type": "LIGHT_ON"}}
+
+		]
+	}
+}

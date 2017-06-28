@@ -1,0 +1,42 @@
+{
+    "groupePL": {
+        "name": "Groupe de Point Lumineux",
+		"configuration": {
+			"version": "1.0",
+			"update": ""
+		},
+        "subtype": {
+            "00": {
+                "name": "Defaut",
+                "commands": [                    
+					{
+                        "name": "OFF",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*1*0*##GROUP###",
+						"eventOnly": 1,
+						"configuration": {
+                        },
+						"display": {
+							"generic_type": "LIGHT_OFF"
+						}
+					},					
+					{
+                        "name": "ON",
+                        "type": "action",
+						"subtype": "other",
+                        "isVisible": 1,
+						"logicalId": "*1*1*##GROUP###",
+						"eventOnly": 1,
+						"configuration": {
+                        },
+						"display": {
+							"generic_type": "LIGHT_ON"
+						}
+					}				
+                ]
+            }
+        }
+    }
+}

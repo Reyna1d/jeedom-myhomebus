@@ -1,0 +1,107 @@
+{
+	"shutter": {
+		"name":"Volet",
+		"isVisible":"1",
+		"isEnable":"1",
+		"cmd":[
+			{
+				"name":"Déplacement",
+				"type":"info",
+				"subType":"string",
+				"isHistorized":"0",
+				"unite":"",
+				"logicalId": "status",	
+				"configuration":{				
+					"eventOnly":"1",
+					"init":"0",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"FLAP_STATE",
+					"showNameOndashboard":"0",
+					"showNameOnplan":"0",
+					"showNameOnview":"0",
+					"showNameOnmobile":"0"
+				},
+				"isVisible":"1"
+			},{
+				"name":"Position",
+				"type":"info",
+				"subType":"numeric",
+				"isHistorized":"0",
+				"unite":"%",
+				"logicalId": "statusnum",	
+				"configuration":{					
+					"eventOnly":"1",
+					"init":"0",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0",
+					"minValue":"0",
+					"maxValue":"100",
+				},
+				"isVisible":"0"
+			},{
+				"name":"Ouvrir",
+				"type":"action",
+				"subType":"other",
+				"isHistorized":"1",
+				"logicalId": "*2*1*#WHERE###",
+				"unite":"",
+				"configuration":{
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"template":"",
+				"display":{
+					"icon":"<i class=\"fa fa-arrow-up\"><\/i>",
+					"generic_type":"FLAP_UP"
+				},
+				"value":"Déplacement",
+				"isVisible":"1"
+			},{
+				"name":"Stop",
+				"type":"action",
+				"subType":"other",
+				"isHistorized":"1",
+				"logicalId": "*2*0*#WHERE###",
+				"unite":"",
+				"configuration":{					
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"template":"",
+				"display":{
+					"icon":"<i class=\"fa fa-stop\"><\/i>",
+					"generic_type":"FLAP_STOP"
+				},
+				"value":"Stop - status",
+				"isVisible":"1"
+			},{
+				"name":"Descendre",
+				"type":"action",
+				"subType":"other",
+				"isHistorized":"1",
+				"logicalId": "*2*2*#WHERE###",
+				"unite":"",
+				"configuration":{					
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"template":"",
+				"display":{
+					"icon":"<i class=\"fa fa-arrow-down\"><\/i>",
+					"generic_type":"FLAP_DOWN"
+				},
+				"value":"Déplacement",
+				"isVisible":"1"
+			}
+		]
+	}
+}

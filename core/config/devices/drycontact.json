@@ -1,0 +1,31 @@
+{
+	"drycontact":{
+		"name":"Contact Sec",
+		"isVisible":"1",
+		"isEnable":"1",
+		"cmd":[
+			{
+				"name":"Etat",
+				"type":"info",
+				"subType":"binary",
+				"isHistorized":"0",
+				"logicalId": "status",
+				"unite":"",
+				"configuration":{										
+					"eventOnly":"1",
+					"init":"1",
+					"subTypeAuto":"0",
+					"noBatterieCheck":"0"
+				},
+				"display":{
+					"generic_type":"GENERIC_INFO",
+					"showNameOndashboard":"0",
+					"showNameOnplan":"0",
+					"showNameOnview":"0",
+					"showNameOnmobile":"0"
+				},
+				"isVisible":"0"
+			}
+		]
+	}
+}
