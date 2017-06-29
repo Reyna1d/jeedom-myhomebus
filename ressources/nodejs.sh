@@ -59,12 +59,19 @@ npm cache clean
 sudo npm cache clean
 sudo rm -rf node_modules
 
-echo 80 > /tmp/myhomebus_dep
-sudo npm install --unsafe-perm jsonfile
-echo 85 > /tmp/myhomebus_dep
-sudo npm install --unsafe-perm request
-echo 90 > /tmp/myhomebus_dep
+echo 75 > /tmp/myhomebus_dep
+echo "Installation de simple-node-logger"
+sudo npm install --unsafe-perm simple-node-logger
 
+echo 80 > /tmp/myhomebus_dep
+echo "Installation de jsonfile"
+sudo npm install --unsafe-perm jsonfile
+
+echo 85 > /tmp/myhomebus_dep
+echo "Installation de request"
+sudo npm install --unsafe-perm request
+
+echo 90 > /tmp/myhomebus_dep
 sudo chown -R www-data *
 
 rm /tmp/myhomebus_dep

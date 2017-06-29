@@ -12,9 +12,7 @@ var events 	= require("events");
 var debug = true;
 var debugDate = true;
 var common = require('./common');
-var Logit = require('Logit');
-var logit = new Logit();	
-
+const log = require('simple-node-logger').createSimpleLogger({timestampFormat:'YYYY-MM-DD HH:mm:ss'});
 const RETRY_INTERVAL = 10000;
 const STATE_UNCONNECTED = 0;
 const STATE_CONNECTING = 1;
@@ -35,15 +33,11 @@ const SCAN_CONF = '*#1001*0*13#1##';
 _ip : ip de la gateway
 _port : port de la gateway
 _mdp : Mot de passe de connexion à la gateway
-_debug : {
-	enable : activer ou non le mode debug
-	date : affichage ou non de la date dans le debug
-	prefix : prefix en début de ligne de débug
-	colors : couleur de la ligne de debug
-	}
 */
 
-function myHome(_ip,_port,_mdp,_debug) {
+function myHome(_ip,_port,_mdp,debuglevel) {
+	if (debuglevel) log.setLevel(debuglevel);
+
 	events.EventEmitter.call(this);	
 	var self = this;
 	this.delayVR = 30000; //Delai (en ms) ou l'actionneur du VR se coupe (et donc envoi un état 0)
@@ -61,19 +55,9 @@ function myHome(_ip,_port,_mdp,_debug) {
 	this.reconnect = true; //Doit-on se reconnecter automatiquement
 	this.nbReconnect = -1; //Nb de tentative de reconnection auto (-1 : infini)
 	this.nbTentativew = 1;	
-
-    this.debug = {
-    	mode:logit.INFO, //Que les infos par def
-      	enable:true,
-      	date:true,
-      	prefix:'',
-      	colors:null,
-    };
-
 	this.states = {};
 	this.config = {};
 	
-	logit.setDebugMode(common.merge_options(this.debug,_debug));
 	
 	/*********************************************************************************/
 	/*  						 	SCAN Configuration 								 */
@@ -85,11 +69,11 @@ function myHome(_ip,_port,_mdp,_debug) {
 		self.socketConfig = net.connect({host:self.ip,port:self.port});
 		self.socketConfig.on('data', function(data) {
 	  		var reponse = data.toString();
-	  		//logit.log('<- '+reponse);
+	  		//log.debug('<- '+reponse);
 	  		switch (self.stateGatewayConfig) { 
 			  	case STATE_UNCONNECTED: //Pas encore connecté, on recois donc la premère réponse
 			  		if (reponse==ACK) { //Connection acceptée			  			
-			  			logit.log('Gateway CONFIG Connected');
+			  			log.info('Gateway CONFIG Connected');
 			  			self.stateGatewayConfig = STATE_CONNECTING;			  			
 			  			self.socketConfig.write(START_CONFIG); //Initialisation du socket en mode config			
 			  		}
@@ -97,7 +81,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 	  	
 				case STATE_CONNECTING : //Socket en cours d'initialisation
 			  		if (reponse==ACK) { //Socket intialisé
-			  			logit.log('Gateway CONFIG Initialized (no mdp)');
+			  			log.info('Gateway CONFIG Initialized (no mdp)');
 			  			self.stateGatewayConfig = STATE_CONNECTED;			  			
 			  			self.socketConfig.write(SCAN_ALL);
 			  		}else{	//Pas ok, on tente de se loger avec le mdp
@@ -109,7 +93,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 							/* nonce is first captured string from regexp */
 							var p = common.calcPass(self.mdp, m[1]);					
 							self.stateGatewayConfig = STATE_LOGGING_IN;
-							logit.log('cde -> *#'+p+'##');
+							log.debug('cde -> *#'+p+'##');
 							self.socketConfig.write('*#'+p+'##');
 						}
 			  		}
@@ -117,7 +101,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 
 				case STATE_LOGGING_IN :
 					if (reponse==ACK) {
-						logit.log('Gateway CONFIG Initialized');
+						log.info('Gateway CONFIG Initialized');
 						self.stateGatewayConfig = STATE_CONNECTED;																
 			  			self.socketConfig.write(SCAN_ALL);
 					}
@@ -166,12 +150,12 @@ function myHome(_ip,_port,_mdp,_debug) {
 				switch (self.stateGatewayConfigState){
 					case 0: //1ere pass du scan, on scan tous les devices
 						if (/\*#1001\*0\*13\*(\d+)##/g.exec(rep)){ //adresse MAC d'un périf
-							logit.log(rep);
+							log.debug(rep);
 							var m2 = rep.match(/\*#(\d+)\*(\d+)\*(\d+)\*(\d+)##/);
 							var mac = parseInt(m2[4],10);	
 							this.config[mac]=null;							
 						} else{
-							logit.log(rep);
+							log.debug(rep);
 						}
 						break;
 				}
@@ -185,7 +169,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 						// 	self.socketConfig.write('*1001*10#'+mac+'*0##');
 						// }
 						var arr = Object.keys(this.config);
-						logit.log(arr[0]);
+						log.debug(arr[0]);
 						self.socketConfig.write('*1001*10#'+arr[0]+'*0##');
 						break;
 				}
@@ -198,15 +182,15 @@ function myHome(_ip,_port,_mdp,_debug) {
 	/*********************************************************************************/
 	this.custoCde = function(cdeOpen){
 		//CUSTO CDE OpenWebNet
-		logit.log('CUSTO CDE');
+		log.debug('CUSTO CDE');
 		if (/\*1\*([0-9][0-9]{0,1})\*([0-9]?\d{1})([0-9]?\d{1})/g.exec(cdeOpen)){ //CUSTO WHO=1
 			var tabRes = cdeOpen.split(/[\*#]/); //On décompose la réponse
 			var what = parseInt(tabRes[2]);
-			logit.log('what : '+what);
+			log.debug('what : '+what);
 			var adresse = tabRes[3];										
 			switch (what) { 
 				case 99: //Switch de l'état du PL : Commande de la forme *1*99*WHERE##
-					logit.log('CUSTO CDE : 99');
+					log.debug('CUSTO CDE : 99');
 					var obj = common.AdrToObj(adresse);
 					var id='01'+common.formatInt(obj.Amb)+common.formatInt(obj.PL);	
 					var what = 1;
@@ -238,11 +222,11 @@ function myHome(_ip,_port,_mdp,_debug) {
             self.socketCde = net.connect({host:self.ip,port:self.port});
             self.socketCde.on('data', function(data) {
                 var reponse = data.toString();
-                //logit.log('<- '+reponse);
+                //log.debug('<- '+reponse);
                 switch (self.stateGatewayCde) { 
                     case STATE_UNCONNECTED: //Pas encore connecté, on recois donc la premère réponse
                         if (reponse==ACK) { //Connection acceptée			  			
-                            logit.log('Socket CDE Connected');
+                            log.info('Socket CDE Connected');
                             self.stateGatewayCde = STATE_CONNECTING;
                             try {
                                 self.socketCde.write(START_COMMAND); //Initialisation du socket en mode event    
@@ -255,10 +239,10 @@ function myHome(_ip,_port,_mdp,_debug) {
             
                     case STATE_CONNECTING : //Socket en cours d'initialisation
                         if (reponse==ACK) { //Socket intialisé
-                            logit.log('Socket CDE Initialized (no mdp)');
+                            log.info('Socket CDE Initialized (no mdp)');
                             self.stateGatewayCde = STATE_CONNECTED;			  			
                             if (cdeOpen){
-                                logit.log(cdeOpen);
+                                log.debug(cdeOpen);
                                 try {  
                                 self.socketCde.write(self.custoCde(cdeOpen));
                                 } catch (e) { //Erreur lors de l'envoie de la commande
@@ -275,7 +259,7 @@ function myHome(_ip,_port,_mdp,_debug) {
                                 /* nonce is first captured string from regexp */
                                 var p = common.calcPass(self.mdp, m[1]);					
                                 self.stateGatewayCde = STATE_LOGGING_IN;
-                                logit.log('cde -> *#'+p+'##');							
+                                log.debug('cde -> *#'+p+'##');							
                                 try {  
                                 self.socketCde.write('*#'+p+'##');
                                 } catch (e) { //Erreur lors de l'envoie de la commande
@@ -288,10 +272,10 @@ function myHome(_ip,_port,_mdp,_debug) {
 
                     case STATE_LOGGING_IN :
                         if (reponse==ACK) {
-                            logit.log('Socket CDE Initialized');
+                            log.info('Socket CDE Initialized');
                             self.stateGatewayCde = STATE_CONNECTED;																
                             if (cdeOpen){
-                                logit.log('Socket CDE  send : '+cdeOpen);			  				
+                                log.debug('Socket CDE  send : '+cdeOpen);			  				
                                 try { 
                                 	self.socketCde.write(self.custoCde(cdeOpen));
                                 } catch (e) { //Erreur lors de l'envoie de la commande
@@ -314,25 +298,26 @@ function myHome(_ip,_port,_mdp,_debug) {
             });
         
             self.socketCde.on('end', function() {
-                logit.log('Socket CDE END');		  	
+                log.info('Socket CDE END');		  	
                 self.stateGatewayCde = STATE_UNCONNECTED;
                 self.socketCde = false;  	
             });
         
             self.socketCde.on('close', function() {
-                logit.log('Socket CDE CLOSE');
+                log.info('Socket CDE CLOSE');
                 self.stateGatewayCde = STATE_UNCONNECTED;
                 self.socketCde = false;  	
             });
         
             self.socketCde.on('disconnect', function(){
-                logit.log('Socket CDE DISCONNECT');
+                log.info('Socket CDE DISCONNECT');
                 self.stateGatewayCde = STATE_UNCONNECTED;
                 self.socketCde = false;
             });
         
             self.socketCde.on('error', function(err) {
                 self.stateGateway = STATE_UNCONNECTED;
+				log.error('ERROR : '+err);
             });
         }
 	};
@@ -343,16 +328,16 @@ function myHome(_ip,_port,_mdp,_debug) {
 	/*********************************************************/
 	this.login = function() {
 		self.stateGateway = STATE_UNCONNECTED;
-		logit.log('Connect to Gateway ('+self.ip+":"+self.port+')');
+		log.info('Connect to Gateway ('+self.ip+":"+self.port+')');
 		self.socketEvent = net.connect({host:self.ip,port:self.port});
 
 		self.socketEvent.on('data', function(data) {
   			var reponse = data.toString();
-		  //logit.log('<- '+reponse);
+		  //log.debug('<- '+reponse);
 		  switch (self.stateGateway) { 
 		  	case STATE_UNCONNECTED: //Pas encore connecté, on recois donc la premère réponse
 		  		if (reponse==ACK) { //Connection acceptée
-		  			logit.log('Gateway Connected');
+		  			log.info('Gateway Connected');
 		  			self.stateGateway = STATE_CONNECTING;
 		  			self.socketEvent.write(START_EVENT); //Initialisation du socket en mode event			
 		  		}
@@ -360,7 +345,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 		  	
 		  	case STATE_CONNECTING : //Socket en cours d'initialisation
 		  		if (reponse==ACK) { //Socket intialisé
-		  			logit.log('Gateway Initialized without Login');
+		  			log.info('Gateway Initialized without Login');
 		  			self.stateGateway = STATE_CONNECTED;
 		  			self.emit("online");
 		  			self.sendCde('*#1*0##');
@@ -373,7 +358,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 						/* nonce is first captured string from regexp */
 						var p = common.calcPass(self.mdp, m[1]);					
 						self.stateGateway = STATE_LOGGING_IN;
-						logit.log('-> *#'+p+'##');
+						log.debug('-> *#'+p+'##');
 						self.socketEvent.write('*#'+p+'##');
 					}
 		  		}
@@ -381,7 +366,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 		  	
 			case STATE_LOGGING_IN :
 				if (reponse==ACK) {
-					logit.log('Gateway Initialized with Login');
+					log.info('Gateway Initialized with Login');
 					self.stateGateway = STATE_CONNECTED;					
 					self.emit("online");
 					
@@ -391,32 +376,32 @@ function myHome(_ip,_port,_mdp,_debug) {
 			break;
 
 		  	case STATE_CONNECTED :
-		  		//logit.log('<- '+reponse);
+		  		//log.debug('<- '+reponse);
 		  		self.handleData(reponse);		  		
 		  	break;
 		  }
 		});
 
 		self.socketEvent.on('end', function() {
-		  	logit.log('Gateway client end');
+		  	log.info('Gateway client end');
 		    self.stateGateway = STATE_UNCONNECTED;
 		  	self.reconnecteSocket();
 		});
 
 		self.socketEvent.on('close', function() {
-			logit.log('Gateway client close');
+			log.info('Gateway client close');
 			self.stateGateway = STATE_UNCONNECTED;
 			self.reconnecteSocket();
 		});
 
 		self.socketEvent.on('disconnect', function(){
-			logit.log('Gateway client disconnected');
+			log.info('Gateway client disconnected');
 			self.stateGateway = STATE_UNCONNECTED;		   	
 		   	self.reconnecteSocket();
 		});
 
 		self.socketEvent.on('error', function(err) {
-			logit.log('Gateway Error '+err.code);
+			log.error('Gateway Error '+err.code);
 			self.emit("error", err.code);
 			self.stateGateway = STATE_UNCONNECTED;		  	
 		});		
@@ -439,11 +424,11 @@ function myHome(_ip,_port,_mdp,_debug) {
 				var adresse = tabRes[3];
 				var obj = common.AdrToObj(adresse);
 				var id='01'+common.formatInt(obj.Amb)+common.formatInt(obj.PL);
-				logit.log('PL '+id);
+				log.debug('PL '+id);
 				if(this.states[id]!= undefined){ //Si on trouve une info précédente concernant cette lumière
 					var oldStatus = this.states[id].status;
 					var oldTs = this.states[id].ts; 
-					logit.log('PL : ' + oldStatus+' -> '+status);
+					log.debug('PL : ' + oldStatus+' -> '+status);
 					if(oldStatus!=status){ //Si le status a changé par rapport a la dernière fois
 						var ts = Date.now(); //Timestamp courant
 						this.states[id].status = status;
@@ -480,40 +465,40 @@ function myHome(_ip,_port,_mdp,_debug) {
 				var adresse = tabRes[3];
 				var obj = common.AdrToObj(adresse);
 				var id='02'+common.formatInt(obj.Amb)+common.formatInt(obj.PL);
-				logit.log('VR '+id);	
+				log.debug('VR '+id);	
 				if(this.states[id]!= undefined){ //Si on trouve une info précédente concernant ce VR
 					var oldStatus = this.states[id].status;
 					var oldTs = this.states[id].ts; 
-					logit.log('VR : '+ oldStatus+' -> '+status);					
+					log.debug('VR : '+ oldStatus+' -> '+status);					
 					if(oldStatus!=status){ // Si le status a changé par rapport a la dernière fois
 						var ts = Date.now(); // Timestamp courant
 						if(oldStatus==0){ // Si le VR est dans une position inconnue
-							logit.log('VR : position inconnue');
+							log.debug('VR : position inconnue');
 							//le VR doit être en MVT ou fixe si on recois 0, dans ce cas, on ne sait toujours pas
 							//la position du VR, on laisse donc 0
 							this.states[id].status = -status; // - 0 = 0 
 
 						}else if(oldStatus>0){//Si le VR est fixe
 							if(status!=0){ //Si on recois autre chose qu'un STOP, sinon on ne fait rien
-								logit.log('VR : arret manuel');									
+								log.debug('VR : arret manuel');									
 								this.states[id].status = -status;
 								this.states[id].ts = ts;
 							}else{
-								logit.log('VR : arret manuel alors que VR fixe, on ne fait rien');
+								log.debug('VR : arret manuel alors que VR fixe, on ne fait rien');
 								this.states[id].ts = ts;									
 							}
 
 						}else{ //le VR est en mouvement
-							logit.log('VR : Volet en mvt');	
+							log.debug('VR : Volet en mvt');	
 							if(status==0){ //Si c'est un arret du VR
-								logit.log('VR : '+ts+' - '+oldTs+' -> '+(ts-oldTs));
+								log.debug('VR : '+ts+' - '+oldTs+' -> '+(ts-oldTs));
 								var newStatus = 0;
 								//Il faut faire la distinction entre un STOP volontaire ou un STOP auto de l'actionneur
 								if(ts>oldTs+this.delayVR){ //C'est un passage à 0 de l'actionneur auto																			
 									newStatus = 0 - oldStatus;
-									logit.log('VR : arret auto -> '+newStatus);
+									log.debug('VR : arret auto -> '+newStatus);
 								}else{//C'est un stop volontaire
-									logit.log('VR : arret manuel');									
+									log.debug('VR : arret manuel');									
 									newStatus = 3; //3 = mi-ouvert/mi-fermé												
 								}
 								//this.states[id] = { status : newStatus, ts : ts};
@@ -530,7 +515,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 							states : this.states[id],
 						});	
 					}else{
-						logit.log('VR : Pas de changement de status.');
+						log.debug('VR : Pas de changement de status.');
 					}
 				}else{ //pas encore d'info
 					this.states[id] = { status : status, ts : Date.now()};			
@@ -553,7 +538,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 				// 		28 : Rotary selector in fast counter-clockwise rotation
 				//	pushbutton : virtual pressure of the push button n N value = [0-31]
 				//	address : push button virtual address = [0-2047]
-				logit.log('CEN+'); 	
+				log.debug('CEN+'); 	
 				var tabRes = rep.split(/[\*#]/); //On décompose la réponse 
 				self.emit("CEN+", {
 					address : tabRes[4],
@@ -570,7 +555,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 				//Commande BASIC CEN : *15*pushbutton*address##
 				//	pushbutton : virtual pressure of the push button n N value = [0-31]
 				//	address : push button virtual address
-				logit.log('BASIC CEN'); 
+				log.debug('BASIC CEN'); 
 				var tabRes = rep.split(/[\*#]/); //On décompose la réponse
 				self.emit("CEN", {
 					address : tabRes[3],
@@ -590,7 +575,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 				// 		3 : Extended pressure
 				//	pushbutton : virtual pressure of the push button n N value = [0-31]
 				//	address : push button virtual address
-				logit.log('EVOLVED CEN'); 
+				log.debug('EVOLVED CEN'); 
 				var tabRes = rep.split(/[\*#]/); //On décompose la réponse
 				self.emit("CEN", {
 					address : tabRes[4],
@@ -610,7 +595,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 			//	  	  Commande de CONTACT SEC		 //
 			///////////////////////////////////////////	
 			else if (/^\*25\*3(\d)#[0-1]\*3(\d+)/g.exec(rep)){ //Toutes les Commande de CONTACT SEC
-				logit.log('DRYCONTACT'); 
+				log.debug('DRYCONTACT'); 
 				var tabRes = rep.split(/[\*#]/); //On décompose la réponse
 				self.emit("drycontact", {
 					value : tabRes[2]=='1',
@@ -634,7 +619,7 @@ function myHome(_ip,_port,_mdp,_debug) {
 				var adresse = tabRes[3];								
 				var obj = common.AdrToObj(adresse);
 				var id='01'+common.formatInt(obj.Amb)+common.formatInt(obj.PL);
-				logit.log('DIM : '+action+' '+obj.Amb+' - '+obj.PL);
+				log.debug('DIM : '+action+' '+obj.Amb+' - '+obj.PL);
 				self.emit("DIM", {
 					amb : obj.Amb,
 					pl : obj.PL,
@@ -654,14 +639,15 @@ function myHome(_ip,_port,_mdp,_debug) {
 
 	this.reconnecteSocket = function() {
 		if(self.reconnect){
-			logit.log('Attempt to reconnect to Gateway ('+self.ip+":"+self.port+')');
+			log.info('Attempt to reconnect to Gateway ('+self.ip+":"+self.port+')');
 			setTimeout(function() {			
 				self.socketEvent.connect({host:self.ip,port: self.port});
 			}, self.retry_Interval);
 		};
 	};
 
-	this.login(_ip, _port, _mdp);
+	//this.login(_ip, _port, _mdp);
+	this.login();
 };
 
 util.inherits(myHome, events.EventEmitter);	

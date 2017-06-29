@@ -19,6 +19,7 @@
     }
   ],
   "dependencies": {
+    "simple-node-logger": "*",   
     "jsonfile": "*",    
     "request" : "*"
   }

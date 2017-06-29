@@ -29,12 +29,13 @@ class myhomebus extends eqLogic {
 		$return['log'] = 'myhomebus_dep';
 		$request = realpath(dirname(__FILE__) . '/../../node/node_modules/request');
 		$jsonfile = realpath(dirname(__FILE__) . '/../../node/node_modules/jsonfile');
+		$simplenodelogger = realpath(dirname(__FILE__) . '/../../node/node_modules/simple-node-logger');
 		$return['progress_file'] = '/tmp/myhomebus_dep';
-#		if (is_dir($jsonfile) && is_dir($request) && is_dir($jsonsocket)) {
+		if (is_dir($jsonfile) && is_dir($request) && is_dir($simplenodelogger)) {
 			$return['state'] = 'ok';
-#		} else {
-#			$return['state'] = 'nok';
-#		}
+		} else {
+			$return['state'] = 'nok';
+		}
 		return $return;
 	}
 
@@ -49,7 +50,7 @@ class myhomebus extends eqLogic {
 		$return = array();
 		$return['log'] = 'myhomebuscmd';
 		$return['state'] = 'nok';
-		$pid = trim( shell_exec ('ps ax | grep "myhomebus/node/myhomebus.js" | grep -v "grep" | wc -l') );
+		$pid = trim( shell_exec ('ps ax | grep "myhomebus/node/daemon.js" | grep -v "grep" | wc -l') );
 		if ($pid != '' && $pid != '0') {
 			$return['state'] = 'ok';
 		}
@@ -92,10 +93,10 @@ class myhomebus extends eqLogic {
 	}
 
 	public static function launch_svc($url, $ip, $port, $mdp, $enable_log, $socketport) {
-		#$log = log::convertLogLevel(log::getLogLevel('myhomebus'));
+		$log = log::convertLogLevel(log::getLogLevel('myhomebus'));		
 		$myhome_path = realpath(dirname(__FILE__) . '/../../node');
 
-		$cmd = 'nice -n 19 nodejs ' . $myhome_path . '/myhomebus.js ' . $url . ' ' . $ip . ' ' . $port . ' ' . $mdp . ' ' . $enable_log . ' ' . $socketport;
+		$cmd = 'nice -n 19 nodejs ' . $myhome_path . '/daemon.js ' . $url . ' ' . $ip . ' ' . $port . ' ' . $mdp . ' ' . $log . ' ' . $enable_log . ' ' . $socketport;
 
 		log::add('myhomebus', 'debug', 'Lancement démon myHomeBus : ' . $cmd);
 
