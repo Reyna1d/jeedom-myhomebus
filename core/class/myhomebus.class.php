@@ -50,7 +50,7 @@ class myhomebus extends eqLogic {
 		$return = array();
 		$return['log'] = 'myhomebuscmd';
 		$return['state'] = 'nok';
-		$pid = trim( shell_exec ('ps ax | grep "myhomebus/node/daemon.js" | grep -v "grep" | wc -l') );
+		$pid = trim( shell_exec ('ps ax | grep "myhomebus/node/deamon.js" | grep -v "grep" | wc -l') );
 		if ($pid != '' && $pid != '0') {
 			$return['state'] = 'ok';
 		}
@@ -87,8 +87,8 @@ class myhomebus extends eqLogic {
 		$log_path = log::getPathToLog('myhomebuscmd');
 		$enable_log = $enable_logging;
 		
-		$url = network::getNetworkAccess('internal', 'proto:ip') . '/plugins/myhomebus/core/php/jeemyhome.php?apikey=' . jeedom::getApiKey('myhomebus');
-
+		#$url = network::getNetworkAccess('internal', 'proto:ip') . '/plugins/myhomebus/core/php/jeemyhome.php?apikey=' . jeedom::getApiKey('myhomebus');
+		$url = 'http://127.0.0.1'. '/plugins/myhomebus/core/php/jeemyhome.php?apikey=' . jeedom::getApiKey('myhomebus');
 		myhomebus::launch_svc($url, $ipGateway, $portGateway, $mdpGateway, $enable_log, $socketport);
 	}
 
@@ -96,28 +96,28 @@ class myhomebus extends eqLogic {
 		$log = log::convertLogLevel(log::getLogLevel('myhomebus'));		
 		$myhome_path = realpath(dirname(__FILE__) . '/../../node');
 
-		$cmd = 'nice -n 19 nodejs ' . $myhome_path . '/daemon.js ' . $url . ' ' . $ip . ' ' . $port . ' ' . $mdp . ' ' . $log . ' ' . $enable_log . ' ' . $socketport;
+		$cmd = 'nice -n 19 nodejs ' . $myhome_path . '/deamon.js ' . $url . ' ' . $ip . ' ' . $port . ' ' . $mdp . ' ' . $log . ' ' . $enable_log . ' ' . $socketport;
 
 		log::add('myhomebus', 'debug', 'Lancement démon myHomeBus : ' . $cmd);
 
 		$result = exec('nohup ' . $cmd . ' >> ' . log::getPathToLog('myhomebuscmd') . ' 2>&1 &');
 		if (strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) {
-		log::add('myhomebus', 'error', $result);
-		return false;
+			log::add('myhomebus', 'error', $result);
+			return false;
 		}
 
 		$i = 0;
 		while ($i < 30) {
-		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] == 'ok') {
-			break;
-		}
-		sleep(1);
-		$i++;
+			$deamon_info = self::deamon_info();
+			if ($deamon_info['state'] == 'ok') {
+				break;
+			}
+			sleep(1);
+			$i++;
 		}
 		if ($i >= 30) {
-		log::add('myhomebus', 'error', 'Impossible de lancer le démon myHomeBus, vérifiez le port', 'unableStartDeamon');
-		return false;
+			log::add('myhomebus', 'error', 'Impossible de lancer le démon myHomeBus, vérifiez le port', 'unableStartDeamon');
+			return false;
 		}
 		message::removeAll('myhomebus', 'unableStartDeamon');
 		log::add('myhomebus', 'info', 'Démon myHomeBus lancé');
@@ -130,13 +130,13 @@ class myhomebus extends eqLogic {
 		log::add('myhomebus', 'info', 'Arrêt du service myHomeBus');
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['state'] == 'ok') {
-		sleep(1);
-		exec('kill -9 $(ps aux | grep "myhomebus/node/deamon.js" | awk \'{print $2}\')');
+			sleep(1);
+			exec('kill -9 $(ps aux | grep "myhomebus/node/deamon.js" | awk \'{print $2}\')');
 		}
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['state'] == 'ok') {
-		sleep(1);
-		exec('sudo kill -9 $(ps aux | grep "myhomebus/node/deamon.js" | awk \'{print $2}\')');
+			sleep(1);
+			exec('sudo kill -9 $(ps aux | grep "myhomebus/node/deamon.js" | awk \'{print $2}\')');
 		}
 	}
 

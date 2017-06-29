@@ -171,12 +171,12 @@ gateway.on('message', function(msg) {
 gateway.on('statePL', function(msg) {
 	//logit.log(JSON.stringify(msg));
 	jeeApi = urlJeedom + "&statePL="+encodeURIComponent(JSON.stringify(msg));
-	log.debug('MyHomeBus Socket : Changement de status PL (amb: '+msg.amb+', PL: '+msg.pl+', status: '+msg.states.status+')');
-	//log.debug(jeeApi);
+	log.debug('MyHomeBus Socket : Changement de status PL (amb: '+msg.amb+', PL: '+msg.pl+', status: '+msg.states.status+')');	
 	request(jeeApi, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			log.debug('Return OK from Jeedom');
 		}else{
+			log.debug(jeeApi);
 			log.error('Error 5 : '+error+' ('+response.statusCode+')');	
 		}
 	});
@@ -186,11 +186,11 @@ gateway.on('stateVR', function(msg) {
 	//logit.log(JSON.stringify(msg));
 	jeeApi = urlJeedom + "&stateVR="+encodeURIComponent(JSON.stringify(msg));
 	log.debug('MyHomeBus Socket : Changement de status VR (amb: '+msg.amb+', PL: '+msg.pl+', status: '+msg.states.status+')');
-	log.debug(jeeApi);
 	request(jeeApi, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			log.debug('Return OK from Jeedom');
 		}else{
+			log.debug(jeeApi);
 			log.error('Error 6: '+error+' ('+response.statusCode+')');	
 		}
 	});
@@ -207,11 +207,11 @@ gateway.on('CEN+', function(msg) {
 		}
 	}
 	jeeApi = urlJeedom + "&cenplus="+encodeURIComponent(JSON.stringify(msg));
-	log.debug(jeeApi);
 	request(jeeApi, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			log.debug('Return OK from Jeedom');
 		}else{
+			log.debug(jeeApi);
 			log.error('Error 7 : '+error+' ('+response.statusCode+')');	
 		}
 	});
@@ -220,11 +220,11 @@ gateway.on('CEN+', function(msg) {
 gateway.on('CEN', function(msg) {
 	log.debug('CEN (adress: '+msg.address+', action: '+msg.action+', pushbutton: '+msg.pushbutton+')');
 	jeeApi = urlJeedom + "&cen="+encodeURIComponent(JSON.stringify(msg));
-	log.debug(jeeApi);
 	request(jeeApi, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			log.debug('Return OK from Jeedom');
 		}else{
+			log.debug(jeeApi);
 			log.error('Error 8: '+error+' ('+response.statusCode+')');	
 		}
 	});
@@ -233,11 +233,11 @@ gateway.on('CEN', function(msg) {
 gateway.on('drycontact', function(msg) {
 	log.debug('DRYCONTACT (adress: '+msg.address+', value: '+msg.value+')');
 	jeeApi = urlJeedom + "&drycontact="+encodeURIComponent(JSON.stringify(msg));
-	log.debug(jeeApi);
 	request(jeeApi, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			log.debug('Return OK from Jeedom');
 		}else{
+			log.debug(jeeApi);
 			log.error('Error 9 : '+error+' ('+response.statusCode+')');		
 		}
 	});
