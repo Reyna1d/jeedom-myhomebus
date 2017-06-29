@@ -317,7 +317,7 @@ function myHome(_ip,_port,_mdp,debuglevel) {
         
             self.socketCde.on('error', function(err) {
                 self.stateGateway = STATE_UNCONNECTED;
-				log.error('ERROR : '+err);
+				log.error('ERROR 1 : '+err);
             });
         }
 	};
