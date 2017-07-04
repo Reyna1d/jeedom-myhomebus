@@ -100,7 +100,7 @@ class myhomebus extends eqLogic {
 
 		log::add('myhomebus', 'debug', 'Lancement démon myHomeBus : ' . $cmd);
 
-		$result = exec('nohup ' . $cmd . ' >> ' . log::getPathToLog('myhomebuscmd') . ' 2>&1 &');
+		$result = exec('sudo ' . $cmd . ' >> ' . log::getPathToLog('myhomebuscmd') . ' 2>&1 &');
 		if (strpos(strtolower($result), 'error') !== false || strpos(strtolower($result), 'traceback') !== false) {
 			log::add('myhomebus', 'error', $result);
 			return false;
