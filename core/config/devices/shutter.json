@@ -38,7 +38,7 @@
 					"subTypeAuto":"0",
 					"noBatterieCheck":"0",
 					"minValue":"0",
-					"maxValue":"100",
+					"maxValue":"100"
 				},
 				"isVisible":"0"
 			},{

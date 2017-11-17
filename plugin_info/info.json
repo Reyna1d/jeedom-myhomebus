@@ -7,5 +7,7 @@
 	"require" : "2.0",
 	"category" : "automation protocol",
 	"hasDependency" : true,
-	"hasOwnDeamon" : true
+	"hasOwnDeamon" : true,
+	"changelog" : "https://github.com/Reyna1d/jeedom-myhomebus/blob/master/doc/#language#/changelog.asciidoc",
+	"documentation" : "https://github.com/Reyna1d/jeedom-myhomebus/blob/master/doc/#language#/index.asciidoc"
 }
