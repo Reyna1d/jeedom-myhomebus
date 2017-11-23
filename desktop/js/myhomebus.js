@@ -170,14 +170,14 @@ function addCmdToTable(_cmd) {
     tr += '    </div>';
     tr += '  </div>';
 	tr += '<div class="option">';
-	tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="DureeCmd" placeholder="{{Durée de la commande (en seconde)}}">';
+	tr += '  <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="DureeCmd" placeholder="{{Durée de la commande (en seconde)}}">';
 //    tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="returnStateValue" placeholder="{{Valeur retour d\'état}}" style="margin-top : 5px;">';
 //    tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="returnStateTime" placeholder="{{Durée avant retour d\'état (min)}}" style="margin-top : 5px;">';
     tr += '</td>';
     tr += '<td>';
-    tr += '<span><input type="checkbox" class="cmdAttr" data-l1key="isHistorized" data-size="mini" data-label-text="{{Historiser}}" /></span><br>';
-    tr += '<span><input type="checkbox" class="cmdAttr" data-l1key="isVisible" data-size="mini" data-label-text="{{Afficher}}" checked/></span><br>';
-    tr += '<span><input type="checkbox" class="cmdAttr" data-l1key="display" data-label-text="{{Inverser}}" data-size="mini" data-l2key="invertBinary" /></span> ';
+    tr += '   <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span><br>';
+    tr += '   <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span><br>';
+//    tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" />{{Inverser}}</label></span> ';
 //    tr += '<input style="width : 150px;" class="tooltips cmdAttr form-control input-sm" data-l1key="cache" data-l2key="lifetime" placeholder="Lifetime cache">';
     tr += '</td>';    
     tr += '<td>';
